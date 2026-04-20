@@ -1,13 +1,15 @@
 package phrase_decomposer
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"github.com/steosofficial/steosmorphy/analyzer"
-	"os"
+	"net/http"
 	"regexp"
 	"slices"
 	"strings"
+	"time"
 	"unicode/utf8"
 )
 
@@ -19,12 +21,29 @@ type PhraseDecomposer struct {
 }
 
 func NewPhraseDecomposer() *PhraseDecomposer {
-	file, err := os.Open("adjToNoun_fixed.json")
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+				ClientSessionCache: tls.NewLRUClientSessionCache(2),
+			},
+			MaxIdleConns:        1,
+			IdleConnTimeout:     30 * time.Second,
+			MaxIdleConnsPerHost: 1,
+			MaxConnsPerHost:     1,
+		},
+	}
+	req, err := http.NewRequest("GET", "https: //raw.githubusercontent.com/bigdayd/phrase_decomposer/refs/heads/master/adjToNoun_fixed.json", nil)
 	if err != nil {
 		panic(err)
 	}
-	defer file.Close()
-	decoder := json.NewDecoder(file)
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+	decoder := json.NewDecoder(resp.Body)
 	adjDict := make(map[string]string)
 	err = decoder.Decode(&adjDict)
 	if err != nil {
