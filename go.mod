@@ -1,4 +1,4 @@
-module github.com/bigdayd/phrase-decomposer
+module github.com/bigdayd/phrase_decomposer
 
 go 1.26.0
 
