@@ -33,7 +33,7 @@ func NewPhraseDecomposer() *PhraseDecomposer {
 			MaxConnsPerHost:     1,
 		},
 	}
-	req, err := http.NewRequest("GET", "https: //raw.githubusercontent.com/bigdayd/phrase_decomposer/refs/heads/master/adjToNoun_fixed.json", nil)
+	req, err := http.NewRequest("GET", "https://raw.githubusercontent.com/bigdayd/phrase_decomposer/refs/heads/master/adjToNoun_fixed.json", nil)
 	if err != nil {
 		panic(err)
 	}
