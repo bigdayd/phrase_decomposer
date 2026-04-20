@@ -121,8 +121,8 @@ func (d *PhraseDecomposer) normalizeWord(word string) (string, error) {
 		return word, nil
 	}
 
-	JSON, _ := json.MarshalIndent(parses, "", "  ")
-	println("parses", string(JSON))
+	//JSON, _ := json.MarshalIndent(parses, "", "  ")
+	//println("parses", string(JSON))
 
 	for _, parse := range parses {
 		if slices.Contains(d.blackList, parse.Lemma) || slices.Contains(d.blackList, parse.Word) {
