@@ -13,6 +13,11 @@ import (
 	"unicode/utf8"
 )
 
+type Decomposed struct {
+	Word    string
+	WordRaw string
+}
+
 type PhraseDecomposer struct {
 	analyzer  *analyzer.MorphAnalyzer
 	blackList []string
@@ -81,20 +86,26 @@ func NewPhraseDecomposer() *PhraseDecomposer {
 	}
 }
 
-func (d *PhraseDecomposer) Decompose(phrase string) []string {
+func (d *PhraseDecomposer) Decompose(phrase string) []Decomposed {
 	phrase = strings.Replace(strings.ToLower(phrase), "ё", "е", -1)
 	m1 := regexp.MustCompile(`[a-zа-я]+`)
 	ms := m1.FindAllStringSubmatch(phrase, -1)
-	results := make([]string, 0)
+	results := make([]Decomposed, 0)
 	for _, m := range ms {
 		if r, ok := d.custom[m[0]]; ok {
-			results = append(results, r)
+			results = append(results, Decomposed{
+				Word:    r,
+				WordRaw: m[0],
+			})
 			continue
 		}
 
 		word, err := d.normalizeWord(m[0])
 		if err == nil {
-			results = append(results, word)
+			results = append(results, Decomposed{
+				Word:    word,
+				WordRaw: m[0],
+			})
 		}
 	}
 
