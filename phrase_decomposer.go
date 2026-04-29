@@ -174,6 +174,7 @@ func (d *PhraseDecomposer) normalizeWord(word string) (string, error) {
 						return form.Word, nil
 					}
 				}
+				return parse.Word, nil
 			}
 			return parse.Lemma, nil
 		}
