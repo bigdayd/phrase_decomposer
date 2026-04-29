@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/steosofficial/steosmorphy/analyzer"
 	"net/http"
 	"regexp"
@@ -165,6 +166,15 @@ func (d *PhraseDecomposer) normalizeWord(word string) (string, error) {
 				}
 			}
 		} else if parse.PartOfSpeech == "Глагол" || parse.PartOfSpeech == "Причастие" {
+			fmt.Printf("%+v\n", parse)
+			if parse.Lemma == "[не найдено]" {
+				forms := d.analyzer.Inflect(parse.Word)
+				for _, form := range forms {
+					if form.Number == "Единственное число" {
+						return form.Word, nil
+					}
+				}
+			}
 			return parse.Lemma, nil
 		}
 	}
